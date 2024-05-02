@@ -1,6 +1,25 @@
-var pastPokemon = [];
 var footerClass = document.querySelector(".footer");
 var imageClass = document.querySelector(".pokemon-image");
+var gameInput = document.querySelector(".game-input");
+var submitButton = document.querySelector(".submitButton");
+var guessesRemaining = document.querySelector(".guesses-remaining");
+var pokemonNumber = document.querySelector(".pokemon-number");
+
+var pastPokemon = [];
+var dexNum;
+var maxGuesses = 3
+var guesses = maxGuesses;
+var Pokemon=new Array("Bulbasaur","Ivysaur","Venusaur","Charmander","Charmeleon","Charizard","Squirtle","Wartortle","Blastoise","Caterpie","Metapod","Butterfree","Weedle","Kakuna",
+"Beedrill","Pidgey","Pidgeotto","Pidgeot","Rattata","Raticate","Spearow","Fearow","Ekans","Arbok","Pikachu","Raichu","Sandshrew","Sandslash","Nidoran","Nidorina","Nidoqueen","Nidoran",
+"Nidorino","Nidoking","Clefairy","Clefable","Vulpix","Ninetales","Jigglypuff","Wigglytuff","Zubat","Golbat","Oddish","Gloom","Vileplume","Paras","Parasect","Venonat","Venomoth",
+"Diglett","Dugtrio","Meowth","Persian","Psyduck","Golduck","Mankey","Primeape","Growlithe","Arcanine","Poliwag","Poliwhirl","Poliwrath","Abra","Kadabra","Alakazam","Machop","Machoke",
+"Machamp","Bellsprout","Weepinbell","Victreebel","Tentacool","Tentacruel","Geodude","Graveler","Golem","Ponyta","Rapidash","Slowpoke","Slowbro","Magnemite","Magneton","Farfetch'd",
+"Doduo","Dodrio","Seel","Dewgong","Grimer","Muk","Shellder","Cloyster","Gastly","Haunter","Gengar","Onix","Drowzee","Hypno","Krabby","Kingler","Voltorb","Electrode","Exeggcute",
+"Exeggutor","Cubone","Marowak","Hitmonlee","Hitmonchan","Lickitung","Koffing","Weezing","Rhyhorn","Rhydon","Chansey","Tangela","Kangaskhan","Horsea","Seadra","Goldeen","Seaking",
+"Staryu","Starmie","Mr. Mime","Scyther","Jynx","Electabuzz","Magmar","Pinsir","Tauros","Magikarp","Gyarados","Lapras","Ditto","Eevee","Vaporeon","Jolteon","Flareon","Porygon","Omanyte",
+"Omastar","Kabuto","Kabutops","Aerodactyl","Snorlax","Articuno","Zapdos","Moltres","Dratini","Dragonair","Dragonite","Mewtwo","Mew","Chikorita","Bayleef","Meganium","Cyndaquil","Quilava","Typhlosion","Totodile",
+"Feraliagtr","Sentret","Furret");
+
 
 function generatePokemon(){
 var isRepeated = false;
@@ -10,28 +29,31 @@ var isRepeated = false;
     
 
     //Formats the number to add leading zeros where needed
-    var dexNum = ""
+    var dexNumStr = ""
     if(randomNum <= 9)
     {
-        dexNum = "00" + randomNum;
+        dexNumStr = "00" + randomNum;
     }///if
     else if (randomNum <= 99)
     {
-        dexNum = "0" + randomNum;
+        dexNumStr = "0" + randomNum;
     }//else if
     else
     {
-        dexNum = randomNum;
+        dexNumStr = dexNumStr + randomNum;
     }//else
 
-    return dexNum;
+    dexNum = randomNum;
+    return dexNumStr;
 
 }//generatePokemon
 
-function changeImage(dexNum){
-    // dexNum = "136";
-    imageClass.src = ("../images/PokeSprites/"+dexNum+".png");
-    footerClass.innerHTML = pokedex.get(dexNum)[0];
+function changeImage(dexNumStr){
+    // dexNumStr = "152";
+    // dexNum = Number(dexNumStr);
+    imageClass.src = ("../images/PokeSprites/"+dexNumStr+".png");
+    footerClass.innerHTML = Pokemon[dexNum-1];
+    pokemonNumber.innerHTML = "#"+dexNum;
 
 }
 
@@ -67,10 +89,9 @@ function changeImage(dexNum){
 //     testVar++;
 // }//while
 
-
-generatePokemon();
-
 function beginRun(){
+    guesses = maxGuesses;
+    guessesRemaining.innerHTML = guesses + " guesses remaining";
     var pokemon = generatePokemon();
     changeImage(pokemon);
 
@@ -232,15 +253,15 @@ const pokedex = new Map([
     ["139", ["Omastar",""]],
 
     ["140", ["Kabuto",""]],
-    ["140", ["Kabutops",""]],
-    ["140", ["Aerodactyl",""]],
-    ["140", ["Snorlax",""]],
-    ["140", ["Articuno",""]],
-    ["140", ["Zapdos",""]],
-    ["140", ["Moltres",""]],
-    ["140", ["Dratini",""]],
-    ["140", ["Dragonair",""]],
-    ["140", ["Dragonite",""]],
+    ["141", ["Kabutops",""]],
+    ["142", ["Aerodactyl",""]],
+    ["143", ["Snorlax",""]],
+    ["144", ["Articuno",""]],
+    ["145", ["Zapdos",""]],
+    ["146", ["Moltres",""]],
+    ["147", ["Dratini",""]],
+    ["148", ["Dragonair",""]],
+    ["149", ["Dragonite",""]],
 
     ["150", ["Mewtwo",""]],
     ["151", ["Mew",""]],
@@ -265,6 +286,34 @@ const pokedex = new Map([
 
 ])//pokedex
 
-var dexLimit = pokedex.size;
+// let arrayList = pokedex.values();
+
+//  console.log(arrayList.next().value[0]);
+
+// for (const x of pokedex.values()){
+//     console.log(arrayList.next().value[0]);
+// }
+
+var dexLimit = 151;
 
 beginRun();
+
+
+//Activates when the submit button is pressed
+submitButton.addEventListener("click",function(){
+    if (gameInput.value.toUpperCase() == Pokemon[dexNum-1].toUpperCase()){
+        beginRun();
+    }//if
+    else{
+        guesses--;
+        if(guesses > 0){
+            guessesRemaining.innerHTML = guesses + " guesses remaining";
+        }//if
+        else{
+            alert("YOU ARE SO WRONG!!");
+            beginRun();
+        }//else
+        
+    }//else
+    gameInput.value = "";
+})//submitButton Event
